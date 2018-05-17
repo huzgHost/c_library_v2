@@ -1484,7 +1484,7 @@
       <entry value="500" name="MAV_CMD_START_RX_PAIR">
         <description>Starts receiver pairing</description>
         <param index="1">0:Spektrum</param>
-        <param index="2">RC type (see RC_TYPE enum)</param>
+        <param index="2">0:Spektrum DSM2, 1:Spektrum DSMX</param>
       </entry>
       <entry value="510" name="MAV_CMD_GET_MESSAGE_INTERVAL">
         <description>Request the interval between messages for a particular MAVLink message ID</description>
@@ -2499,27 +2499,27 @@
       </entry>
     </enum>
     <enum name="MAV_BATTERY_CHARGE_STATE">
-      <description>Enumeration for low battery states.</description>
+      <description>Enumeration for states of low battery extent</description>
       <entry value="0" name="MAV_BATTERY_CHARGE_STATE_UNDEFINED">
         <description>Low battery state is not provided</description>
       </entry>
       <entry value="1" name="MAV_BATTERY_CHARGE_STATE_OK">
-        <description>Battery is not in low state. Normal operation.</description>
+        <description>Battery is not nearly empty, normal operation</description>
       </entry>
       <entry value="2" name="MAV_BATTERY_CHARGE_STATE_LOW">
-        <description>Battery state is low, warn and monitor close.</description>
+        <description>Battery state is low, warn and monitor close</description>
       </entry>
       <entry value="3" name="MAV_BATTERY_CHARGE_STATE_CRITICAL">
-        <description>Battery state is critical, return or abort immediately.</description>
+        <description>Battry state is critical, return / abort immediately</description>
       </entry>
       <entry value="4" name="MAV_BATTERY_CHARGE_STATE_EMERGENCY">
-        <description>Battery state is too low for ordinary abort sequence. Perform fastest possible emergency stop to prevent damage.</description>
+        <description>Battry state is too low for ordinary abortion, fastest possible emergency stop preventing damage</description>
       </entry>
       <entry value="5" name="MAV_BATTERY_CHARGE_STATE_FAILED">
-        <description>Battery failed, damage unavoidable.</description>
+        <description>Battry failed, damage unavoidable</description>
       </entry>
       <entry value="6" name="MAV_BATTERY_CHARGE_STATE_UNHEALTHY">
-        <description>Battery is diagnosed to be defective or an error occurred, usage is discouraged / prohibited.</description>
+        <description>Battry is diagnosed to be broken or an error occurred, usage is discouraged / prohibited</description>
       </entry>
     </enum>
     <enum name="MAV_VTOL_STATE">
@@ -2885,15 +2885,6 @@
         <description>North, East, Down</description>
       </entry>
     </enum>
-    <enum name="RC_TYPE">
-      <description>RC type</description>
-      <entry value="0" name="RC_TYPE_SPEKTRUM_DSM2">
-        <description>Spektrum DSM2</description>
-      </entry>
-      <entry value="1" name="RC_TYPE_SPEKTRUM_DSMX">
-        <description>Spektrum DSMX</description>
-      </entry>
-    </enum>
   </enums>
   <messages>
     <message id="0" name="HEARTBEAT">
@@ -2904,6 +2895,7 @@
       <field type="uint32_t" name="custom_mode">A bitfield for use for autopilot-specific flags</field>
       <field type="uint8_t" name="system_status" enum="MAV_STATE">System status flag, as defined by MAV_STATE enum</field>
       <field type="uint8_t_mavlink_version" name="mavlink_version">MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version</field>
+      <field type="uint8_t" name="dc_value"></field>
     </message>
     <message id="1" name="SYS_STATUS">
       <description>The general system state. If the system is following the MAVLink standard, the system state is mainly defined by three orthogonal states/modes: The system mode, which is either LOCKED (motors shut down and locked), MANUAL (system under RC control), GUIDED (system with autonomous position control, position setpoint controlled manually) or AUTO (system guided by path/waypoint planner). The NAV_MODE defined the current flight state: LIFTOFF (often an open-loop maneuver), LANDING, WAYPOINTS or VECTOR. This represents the internal navigation state machine. The system status shows whether the system is currently active or not and if an emergency occured. During the CRITICAL and EMERGENCY states the MAV is still considered to be active, but should start emergency procedures autonomously. After a failure occured it should first move from active to critical to allow manual intervention and then move to emergency after a certain timeout.</description>
@@ -4660,5 +4652,11 @@
       <field type="float[21]" name="pose_covariance">Pose (states: x, y, z, roll, pitch, yaw) covariance matrix upper right triangle (first six entries are the first ROW, next five entries are the second ROW, etc.)</field>
       <field type="float[21]" name="twist_covariance">Twist (states: vx, vy, vz, rollspeed, pitchspeed, yawspeed) covariance matrix upper right triangle (first six entries are the first ROW, next five entries are the second ROW, etc.)</field>
     </message>
+    <message id="335" name="PESTICIDES">
+            <description>This message encodes all of the pesticides data from the adc.</description>
+            <field type="uint8_t" name="opened">open action flag</field>
+            <field type="uint8_t" name="capacity">pesticides capacity</field>
+            <field type="uint8_t" name="duty">action pwm duty</field>
+        </message>
   </messages>
 </mavlink>
